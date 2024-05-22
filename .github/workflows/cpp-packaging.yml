@@ -160,7 +160,7 @@ jobs:
           # Find way to only build app and auth
         - os: ubuntu-20.04
           vcpkg_triplet_suffix: "linux"
-          additional_build_flags: "-DCMAKE_CXX_FLAGS=-fPIC" 
+          additional_build_flags: ""
           sdk_platform: "linux"
         exclude:
         - os: ubuntu-20.04

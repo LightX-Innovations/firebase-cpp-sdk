@@ -268,11 +268,6 @@ jobs:
       matrix:
         sdk_platform: [linux]
         suffix: ['']
-        include:
-        # Split windows packaging into multiple runners.
-          - sdk_platform: linux
-            suffix: '-x64-Release-static'
-            runs_on: ubuntu-20.04
 
     steps:
       - name: fetch SDK

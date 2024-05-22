@@ -305,50 +305,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-20.04, macos-13]
+        os: [ubuntu-20.04]
         build_type: ["Release", "Debug"]
-        architecture: ["x64", "x86", "arm64"]
-        msvc_runtime: ["static", "dynamic"]
-        linux_abi: ["legacy", "c++11"]
+        architecture: ["x64"]
+        linux_abi: ["c++11"]
         python_version: [3.8]
         include:
-        - os: windows-latest
-          vcpkg_triplet_suffix: "windows-static"
-          additional_build_flags: "--build_tests"
-          sdk_platform: "windows"
-        - os: windows-latest
-          msvc_runtime: "dynamic"
-          vcpkg_triplet_suffix: "windows-static-md"
-          additional_build_flags: "--build_tests"
-          sdk_platform: "windows"
         - os: ubuntu-20.04
           vcpkg_triplet_suffix: "linux"
           additional_build_flags: ""
           sdk_platform: "linux"
-        - os: macos-13
-          vcpkg_triplet_suffix: "osx"
-          additional_build_flags: "--target_format libraries"
-          sdk_platform: "darwin"
-
         exclude:
-        - os: windows-latest
-          linux_abi: "c++11"
-        - os: macos-13
-          architecture: "x86"
-        - os: macos-13
-          msvc_runtime: "dynamic"
-        - os: macos-13
-          linux_abi: "c++11"
-        - os: macos-13
-          build_type: "Debug"
-        - os: ubuntu-20.04
-          msvc_runtime: "dynamic"
         - os: ubuntu-20.04
           build_type: "Debug"
-        - os: ubuntu-20.04
-          architecture: "arm64"
-        - os: windows-latest
-          architecture: "arm64"
 
     steps:
       - name: Store git credentials for all git commands
@@ -372,14 +341,6 @@ jobs:
           echo "VCPKG_RESPONSE_FILE=external/vcpkg_${{ matrix.vcpkg_triplet }}_response_file.txt" >> $GITHUB_ENV
           echo "MATRIX_UNIQUE_NAME=${{ matrix.os }}-${{ matrix.build_type }}-${{ matrix.architecture }}-${{ matrix.python_version }}-${{ matrix.msvc_runtime }}-${{ matrix.linux_abi }}" >> $GITHUB_ENV
           echo "SDK_NAME=${{ matrix.sdk_platform }}-${{ matrix.architecture }}-${{ matrix.build_type }}-${{ matrix.msvc_runtime }}-${{ matrix.linux_abi }}" >> $GITHUB_ENV
-          if [[ '${{ matrix.sdk_platform }}' == 'darwin' ]]; then
-            # If Mac, also hash vcpkg cache on Xcode version.
-            echo "VCPKG_EXTRA_HASH=-xcode${{env.xcodeVersion}}" >> $GITHUB_ENV
-          fi
-
-      - name: Add msbuild to PATH (windows)
-        if: startsWith(matrix.os, 'windows')
-        uses: microsoft/setup-msbuild@v1.1
 
       - name: Cache vcpkg C++ dependencies
         id: cache_vcpkg

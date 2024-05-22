@@ -260,7 +260,7 @@ jobs:
 
   package_desktop:
     name: package-${{ matrix.sdk_platform }}${{ matrix.suffix }}
-    runs-on: ${{ matrix.runs_on_platform }}
+    runs-on: ubuntu-20.04
     needs: [build_tools, build_desktop]
     if: ${{ github.event.inputs.downloadPublicVersion == '' && github.event.inputs.downloadPreviousRun == '' }}
     strategy:
@@ -268,7 +268,6 @@ jobs:
       matrix:
         sdk_platform: [linux]
         suffix: ['']
-        runs_on_platform: [ubuntu-20.04]
         include:
         # Split windows packaging into multiple runners.
           - sdk_platform: linux

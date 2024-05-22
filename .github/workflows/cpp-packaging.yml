@@ -424,42 +424,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sdk_platform: [linux, darwin, windows]
+        sdk_platform: [linux]
         suffix: ['']
         runs_on_platform: [ubuntu-20.04]
         include:
         # Split windows packaging into multiple runners.
-        - sdk_platform: windows
-          suffix: '-x86-Release-static'
-          runs_on_platform: ubuntu-20.04
-        - sdk_platform: windows
-          suffix: '-x86-Release-dynamic'
-          runs_on_platform: ubuntu-20.04
-        - sdk_platform: windows
-          suffix: '-x64-Release-static'
-          runs_on_platform: ubuntu-20.04
-        - sdk_platform: windows
-          suffix: '-x64-Release-dynamic'
-          runs_on_platform: ubuntu-20.04
-        - sdk_platform: windows
-          suffix: '-x86-Debug-static'
-          runs_on_platform: ubuntu-20.04
-        - sdk_platform: windows
-          suffix: '-x86-Debug-dynamic'
-          runs_on_platform: ubuntu-20.04
-        - sdk_platform: windows
-          suffix: '-x64-Debug-static'
-          runs_on_platform: ubuntu-20.04
-        - sdk_platform: windows
-          suffix: '-x64-Debug-dynamic'
-          runs_on_platform: ubuntu-20.04
-        - sdk_platform: darwin
-          runs_on_platform: macos-13
-        exclude:
-        - sdk_platform: windows
-          suffix: ''
-        - sdk_platform: darwin
-          runs_on_platform: ubuntu-20.04
+          - sdk_platform: linux
+            suffix: '-x64-Release-static'
+            runs_on: ubuntu-20.04
+            
     steps:
       - name: setup Xcode version (macos)
         if: runner.os == 'macOS'

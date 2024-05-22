@@ -313,7 +313,7 @@ jobs:
         include:
         - os: ubuntu-20.04
           vcpkg_triplet_suffix: "linux"
-          additional_build_flags: ""
+          additional_build_flags: "-DCMAKE_CXX_FLAGS=-fPIC" 
           sdk_platform: "linux"
         exclude:
         - os: ubuntu-20.04

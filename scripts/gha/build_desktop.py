@@ -234,8 +234,8 @@ def cmake_configure(build_dir, arch, msvc_runtime_library='static', linux_abi='l
   if verbose:
     cmd.append('-DCMAKE_VERBOSE_MAKEFILE=1')
 
-  if cmake_options == "DCMAKE_CXX_FLAGS=-fPIC":
-    cmd.append('-DCMAKE_CXX_FLAGS=-fPIC')
+  if cmake_options:
+    cmd.append('-DCMAKE_POSITION_INDEPENDENT_CODE=ON')
     
   utils.run_command(cmd, check=True)
 

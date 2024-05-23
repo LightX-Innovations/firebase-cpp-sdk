@@ -160,7 +160,7 @@ def cmake_configure(build_dir, arch, msvc_runtime_library='static', linux_abi='l
    verbose (bool): If True, enable verbose mode in the CMake file.
   """
 
-  if cmake_options == '-DCMAKE_CXX_FLAGS=-fPIC':
+  if cmake_options == "DCMAKE_CXX_FLAGS=-fPIC":
     cmd.append('-DCMAKE_CXX_FLAGS=-fPIC')
   
   cmd = ['cmake', '-S', '.', '-B', build_dir]

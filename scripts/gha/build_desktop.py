@@ -235,7 +235,7 @@ def cmake_configure(build_dir, arch, msvc_runtime_library='static', linux_abi='l
     cmd.append('-DCMAKE_VERBOSE_MAKEFILE=1')
 
   if cmake_options:
-    cmd.append('-DCMAKE_POSITION_INDEPENDENT_CODE=ON')
+    cmd.append('-DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true')
     
   utils.run_command(cmd, check=True)
 

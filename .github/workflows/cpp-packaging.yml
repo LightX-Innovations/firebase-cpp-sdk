@@ -225,7 +225,7 @@ jobs:
       # Run the build in the host OS default shell since Windows can't handle long path names in bash.
       - name: Build desktop SDK
         run: |
-          python scripts/gha/build_desktop.py --arch "${{ matrix.architecture }}" --config "${{ matrix.build_type }}" --msvc_runtime_library "${{ matrix.msvc_runtime }}" --linux_abi "${{ matrix.linux_abi }}" --build_dir out-sdk ${VERBOSE_FLAG} ${{ matrix.additional_build_flags }} --gha_build
+          python scripts/gha/build_desktop.py --arch "${{ matrix.architecture }}" --config "${{ matrix.build_type }}" --msvc_runtime_library "${{ matrix.msvc_runtime }}" --linux_abi "${{ matrix.linux_abi }}" --build_dir out-sdk ${VERBOSE_FLAG} ${{ matrix.additional_build_flags }} --gha_build -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 
       - name: Archive SDK
         shell: bash
@@ -315,8 +315,6 @@ jobs:
             fi
           done
           for pkg in artifacts/firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}*-build/*.tgz; do
-            # determine the build variant based on the artifact filename
-            echo pkg
             variant=$(sdk-src/build_scripts/desktop/get_variant.sh "${pkg}")
             additional_flags=(${verbose_flag})
             sdk-src/build_scripts/desktop/package.sh -b ${pkg} -o firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package -p ${{ matrix.sdk_platform }} -t bin -d ${variant} -P python3 -j ${additional_flags[*]}

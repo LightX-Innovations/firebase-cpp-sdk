@@ -160,8 +160,8 @@ def cmake_configure(build_dir, arch, msvc_runtime_library='static', linux_abi='l
    verbose (bool): If True, enable verbose mode in the CMake file.
   """
 
-  if cmake_options and '-DCMAKE_POSITION_INDEPENDENT_CODE=ON' not in cmake_options:
-    cmake_options.append('-DCMAKE_POSITION_INDEPENDENT_CODE=ON')
+  if cmake_options == '-DCMAKE_CXX_FLAGS=-fPIC':
+    cmd.append('-DCMAKE_CXX_FLAGS=-fPIC')
   
   cmd = ['cmake', '-S', '.', '-B', build_dir]
 
@@ -235,7 +235,7 @@ def cmake_configure(build_dir, arch, msvc_runtime_library='static', linux_abi='l
   if verbose:
     cmd.append('-DCMAKE_VERBOSE_MAKEFILE=1')
 
-  utils.run_command(cmd + cmake_options if cmake_options else cmd, check=True)
+  utils.run_command(cmd, check=True)
 
 def main():
   args = parse_cmdline_args()

@@ -233,7 +233,7 @@ jobs:
                                               ${VERBOSE_FLAG} \
                                               ${{ matrix.additional_build_flags }} \
                                               --gha_build \
-                                              --cmake_options -D CMAKE_CXX_FLAGS=-fPIC
+                                              --cmake_options '-DCMAKE_CXX_FLAGS=-fPIC'
 
       - name: Archive SDK
         shell: bash

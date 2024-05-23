@@ -160,7 +160,7 @@ jobs:
           # Find way to only build app and auth
         - os: ubuntu-20.04
           vcpkg_triplet_suffix: "linux"
-          additional_build_flags: "--target firebase_app --target firebase_auth"
+          additional_build_flags: ""
           sdk_platform: "linux"
         exclude:
         - os: ubuntu-20.04

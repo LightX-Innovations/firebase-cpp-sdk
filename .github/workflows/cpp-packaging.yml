@@ -231,7 +231,7 @@ jobs:
                                               --linux_abi "${{ matrix.linux_abi }}" \
                                               --build_dir out-sdk ${VERBOSE_FLAG} ${{ matrix.additional_build_flags }} \
                                               --gha_build \
-                                              --cmake_options "-DCMAKE_POSITION_INDEPENDENT_CODE=ON"
+                                              --cmake_options -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 
       - name: Archive SDK
         shell: bash

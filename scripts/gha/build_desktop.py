@@ -262,8 +262,9 @@ def main():
 
   # CMake configure
   cmake_configure(args.build_dir, args.arch, args.msvc_runtime_library, args.linux_abi,
-                  args.build_tests, args.config, args.target_format,
-                  args.use_openssl, args.disable_vcpkg, args.firestore_dep_source, args.gha_build, args.verbose)
+                args.build_tests, args.config, args.target_format,
+                args.use_openssl, args.disable_vcpkg, args.firestore_dep_source,
+                args.gha_build, args.verbose, args.cmake_options)
 
   # CMake build
   # cmake --build build -j 8

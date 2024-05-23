@@ -299,11 +299,7 @@ jobs:
       - name: postprocess and package built SDK
         run: |
           mkdir -p bin
-          if [[ $(uname) == "Linux"* ]]; then
-            tools_platform=linux
-          else
-            tools_platform=darwin
-          fi
+          tools_platform=linux
           verbose_flag=
           if [[ -n "${{ github.event.inputs.verboseBuild }}" && "${{ github.event.inputs.verboseBuild }}" -ne 0 ]]; then
             verbose_flag=-v
@@ -322,31 +318,8 @@ jobs:
             # determine the build variant based on the artifact filename
             variant=$(sdk-src/build_scripts/desktop/get_variant.sh "${pkg}")
             additional_flags=(${verbose_flag})
-            # Several build targets require explicitly-set binutils format to be passed
-            # to package.sh (and thus, to merge_libraries), or use LLVM binutils.
-            if [[ "${{ matrix.sdk_platform }}" == "darwin" ]]; then
-              # MacOS: use LLVM binutils for both X64 and ARM64
-              additional_flags+=(-L)
-            elif [[ "${{ matrix.sdk_platform }}" == "windows" && "${variant}" == *"/x64/"* ]]; then
-              # Windows x64: force input and output target format
-              additional_flags+=(-f pe-x86-64,pe-bigobj-x86-64)
-            elif [[ "${{ matrix.sdk_platform }}" == "windows" && "${variant}" == *"/x86/"* ]]; then
-              # Windows x86: force input and output target format
-              additional_flags+=(-f pe-i386,pe-bigobj-i386)
-            fi
-            # Only package app and auth components
-            if [[ "${pkg}" == "artifacts/firebase-cpp-sdk-linux-x64-Release--c++11-build/firebase-cpp-sdk-linux-x64-Release--c++11-build.tgz" || "${pkg}" == *"auth"* ]]; then
-              sdk-src/build_scripts/desktop/package.sh -b ${pkg} -o firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package -p ${{ matrix.sdk_platform }} -t bin -d ${variant} -P python3 -j ${additional_flags[*]}
-            else
-              echo "Skipping unneeded component: ${pkg}"
-            fi
+            sdk-src/build_scripts/desktop/package.sh -b ${pkg} -o firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package -p ${{ matrix.sdk_platform }} -t bin -d ${variant} -P python3 -j ${additional_flags[*]}
           done
-          if [[ "${{ matrix.sdk_platform }}" == "darwin" ]]; then
-            # Darwin has a final step after all the variants are done,
-            # create universal libraries and frameworks.
-            sdk-src/build_scripts/other/package.sh sdk-src tmpdir_for_headers
-            sdk-src/build_scripts/desktop/finish_darwin.sh firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package tmpdir_for_headers/include bin
-          fi
           cd firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package
           tar -czhf ../firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package.tgz .
 

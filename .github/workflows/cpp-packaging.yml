@@ -320,6 +320,7 @@ jobs:
           done
           for pkg in artifacts/firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}*-build/*.tgz; do
             # determine the build variant based on the artifact filename
+            echo "${pkg}"
             variant=$(sdk-src/build_scripts/desktop/get_variant.sh "${pkg}")
             additional_flags=(${verbose_flag})
             # Several build targets require explicitly-set binutils format to be passed
@@ -334,12 +335,7 @@ jobs:
               # Windows x86: force input and output target format
               additional_flags+=(-f pe-i386,pe-bigobj-i386)
             fi
-            # Only package app and auth components
-            if [[ "${pkg}" == *"app"* || "${pkg}" == *"auth"* ]]; then
-              sdk-src/build_scripts/desktop/package.sh -b ${pkg} -o firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package -p ${{ matrix.sdk_platform }} -t bin -d ${variant} -P python3 -j ${additional_flags[*]}
-            else
-              echo "Skipping unneeded component: ${pkg}"
-            fi
+            sdk-src/build_scripts/desktop/package.sh -b ${pkg} -o firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package -p ${{ matrix.sdk_platform }} -t bin -d ${variant} -P python3 -j ${additional_flags[*]}
           done
           if [[ "${{ matrix.sdk_platform }}" == "darwin" ]]; then
             # Darwin has a final step after all the variants are done,

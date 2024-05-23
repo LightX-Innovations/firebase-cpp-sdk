@@ -135,7 +135,8 @@ def install_cpp_dependencies_with_vcpkg(arch, msvc_runtime_library, cleanup=True
 def cmake_configure(build_dir, arch, msvc_runtime_library='static', linux_abi='legacy',
                     build_tests=True, config=None, target_format=None,
                     use_openssl=False, disable_vcpkg=False, firestore_dep_source=None,
-                    gha_build=False, verbose=False):
+                    gha_build=False, verbose=False, cmake_options=None):
+
   """ CMake configure.
 
   If you are seeing problems when running this multiple times,
@@ -158,6 +159,10 @@ def cmake_configure(build_dir, arch, msvc_runtime_library='static', linux_abi='l
                      from GitHub, which is useful for metrics tracking.
    verbose (bool): If True, enable verbose mode in the CMake file.
   """
+
+  if cmake_options and '-DCMAKE_POSITION_INDEPENDENT_CODE=ON' not in cmake_options:
+    cmake_options.append('-DCMAKE_POSITION_INDEPENDENT_CODE=ON')
+  
   cmd = ['cmake', '-S', '.', '-B', build_dir]
 
   # If generator is not specifed, default for platform is used by cmake, else
@@ -230,7 +235,7 @@ def cmake_configure(build_dir, arch, msvc_runtime_library='static', linux_abi='l
   if verbose:
     cmd.append('-DCMAKE_VERBOSE_MAKEFILE=1')
 
-  utils.run_command(cmd, check=True)
+  utils.run_command(cmd + cmake_options if cmake_options else cmd, check=True)
 
 def main():
   args = parse_cmdline_args()
@@ -290,6 +295,7 @@ def parse_cmdline_args():
   parser.add_argument('--use_openssl', action='store_true', default=None, help='Use openssl for build instead of boringssl')
   parser.add_argument('--firestore_dep_source', default='RELEASED', help='Where to get Firestore C++ Core source code. "RELEASED"/"TIP"/(Git tag/branch/commit)')
   parser.add_argument('--gha_build', action='store_true', default=None, help='Set to true when building on GitHub, for metric tracking purposes (also changes some prerequisite installation behavior).')
+  parser.add_argument('--cmake_options', nargs='+', default=None, help='Additional options to pass to CMake.')
   args = parser.parse_args()
   return args
 

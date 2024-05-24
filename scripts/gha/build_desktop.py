@@ -233,6 +233,11 @@ def cmake_configure(build_dir, arch, msvc_runtime_library='static', linux_abi='l
   # Print out every command while building.
   if verbose:
     cmd.append('-DCMAKE_VERBOSE_MAKEFILE=1')
+
+    # Add -fPIC flag for position-independent code on any OS
+  cmd.append('-DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true')
+  cmd.append('-DCMAKE_CXX_FLAGS=-fPIC')
+  
     
   utils.run_command(cmd, check=True)
 
@@ -275,10 +280,6 @@ def main():
     cmd.append('--target')
     cmd.extend(args.target)
 
-  # Add -fPIC flag for position-independent code on any OS
-  cmd.append('-DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true')
-  cmd.append('-DCMAKE_CXX_FLAGS=-fPIC')
-  
   utils.run_command(cmd, check=True)
 
 

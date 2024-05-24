@@ -232,8 +232,7 @@ jobs:
                                               --build_dir out-sdk \
                                               ${VERBOSE_FLAG} \
                                               ${{ matrix.additional_build_flags }} \
-                                              --gha_build \
-                                              --cmake_options "DCMAKE_CXX_FLAGS=-fPIC"
+                                              --gha_build
 
       - name: Archive SDK
         shell: bash

@@ -14,6 +14,7 @@
 
 # CMake file for the firebase_database library
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Common source files used by all platforms
 set(common_SRCS
     src/common/common.cc

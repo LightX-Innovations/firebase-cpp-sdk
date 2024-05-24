@@ -17,7 +17,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 include(FindPkgConfig)
-
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 if (NOT DEFINED FIREBASE_CPP_SDK_DIR)
   set(FIREBASE_CPP_SDK_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 endif ()

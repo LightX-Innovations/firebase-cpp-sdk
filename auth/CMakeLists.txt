@@ -27,7 +27,8 @@ binary_to_array("user_data_resource"
     "${CMAKE_CURRENT_LIST_DIR}/src/desktop/user_data.fbs"
     "firebase::auth"
     "${FIREBASE_GEN_FILE_DIR}/auth")
-
+    
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Build the generated header from the flatbuffer schema files.
 set(FLATBUFFERS_FLATC_SCHEMA_EXTRA_ARGS
     "--no-union-value-namespacing"

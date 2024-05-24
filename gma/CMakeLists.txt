@@ -15,6 +15,7 @@
 # CMake file for the firebase_gma library
 
 # Common source files used by all platforms
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(common_SRCS
     src/common/ump/consent_info.cc
     src/common/ump/consent_info_internal.cc

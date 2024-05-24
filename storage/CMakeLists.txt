@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # CMake file for the firebase_storage library
-
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Common source files used by all platforms
 set(common_SRCS
     src/common/common.cc

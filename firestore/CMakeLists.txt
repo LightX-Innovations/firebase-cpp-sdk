@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 if(APPLE AND NOT ANDROID)
   set(settings_apple_SRCS
       src/common/settings_apple.mm)

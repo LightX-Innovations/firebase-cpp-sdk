@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # CMake file for the firebase_messaging library
-
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Build the generated header from the flatbuffer schema files.
 set(FLATBUFFERS_FLATC_SCHEMA_EXTRA_ARGS
     "--no-union-value-namespacing"

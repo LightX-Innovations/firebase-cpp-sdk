@@ -15,6 +15,7 @@
 # CMake file for the firebase_functions library
 
 # Common source files used by all platforms
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(common_SRCS
     src/common/callable_reference.cc
     src/common/callable_result.cc

@@ -580,7 +580,7 @@ if(NOT FIREBASE_CPP_USE_PRIOR_GRADLE_BUILD)
   add_dependencies(FIREBASE_GENERATED_HEADERS FIREBASE_APP_GENERATED_HEADERS)
 else()
   # Add firebase_app as a target on the previously built app.
-  add_library(firebase_app STATIC IMPORTED GLOBAL)
+  add_library(firebase_app SHARED IMPORTED GLOBAL)
   file(MAKE_DIRECTORY "${APP_BINARY_DIR}/generated")
   file(MAKE_DIRECTORY "${FIREBASE_BINARY_DIR}/generated")
   set(app_include_dirs

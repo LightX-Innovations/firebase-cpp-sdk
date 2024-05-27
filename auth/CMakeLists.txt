@@ -29,6 +29,7 @@ binary_to_array("user_data_resource"
     "${FIREBASE_GEN_FILE_DIR}/auth")
     
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 # Build the generated header from the flatbuffer schema files.
 set(FLATBUFFERS_FLATC_SCHEMA_EXTRA_ARGS
     "--no-union-value-namespacing"
@@ -155,7 +156,7 @@ else()
       firebase_rest_lib)
 endif()
 
-add_library(firebase_auth STATIC
+add_library(firebase_auth SHARED
     ${common_SRCS}
     ${auth_platform_SRCS})
 

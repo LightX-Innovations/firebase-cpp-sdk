@@ -43,6 +43,7 @@ binary_to_array("invites_resources"
 # Generate version.h
 set(version_header_dir ${FIREBASE_GEN_FILE_DIR}/app/src/include/firebase)
 set(version_header ${version_header_dir}/version.h)
+
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_custom_target(FIREBASE_APP_GENERATED_HEADERS DEPENDS "${version_header}")
@@ -342,7 +343,7 @@ else()
   set(app_flatbuffers_lib flatbuffers)
 endif()
 
-add_library(firebase_app STATIC
+add_library(firebase_app SHARED
     ${log_SRCS}
     ${log_HDRS}
     ${common_SRCS}

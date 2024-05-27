@@ -277,6 +277,18 @@ jobs:
         suffix: ['']
 
     steps:
+
+      - name: Check uploaded .so files
+        run: |
+          echo "Checking uploaded .so files..."
+          tar -xzf firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package.tgz
+          if [[ -f firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}/out-sdk/app/libfirebase_app.so && -f firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}/out-sdk/auth/libfirebase_auth.so ]]; then
+            echo ".so files uploaded successfully."
+          else
+            echo "ERROR: .so files not found in the uploaded artifact."
+            exit 1
+          fi
+
       - name: fetch SDK
         uses: actions/checkout@v3
         with:
@@ -326,8 +338,6 @@ jobs:
             additional_flags=(${verbose_flag})
             sdk-src/build_scripts/desktop/package.sh -b ${pkg} -o firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package -p ${{ matrix.sdk_platform }} -t bin -d ${variant} -P python3 -j ${additional_flags[*]}
           done
-          # Adding the shared libraries explicitly
-          cp out-sdk/app/libfirebase_app.so out-sdk/auth/libfirebase_auth.so firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package
           cd firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package
           tar -czhf ../firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package.tgz .
 

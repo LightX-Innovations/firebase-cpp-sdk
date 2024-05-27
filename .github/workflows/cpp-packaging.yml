@@ -321,13 +321,13 @@ jobs:
               rm  -rf "${pkg}"
             fi
           done
-          # Adding the shared libraries explicitly
-          cp out-sdk/app/libfirebase_app.so out-sdk/auth/libfirebase_auth.so artifacts/firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-build/
           for pkg in artifacts/firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}*-build/*.tgz; do
             variant=$(sdk-src/build_scripts/desktop/get_variant.sh "${pkg}")
             additional_flags=(${verbose_flag})
             sdk-src/build_scripts/desktop/package.sh -b ${pkg} -o firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package -p ${{ matrix.sdk_platform }} -t bin -d ${variant} -P python3 -j ${additional_flags[*]}
           done
+          # Adding the shared libraries explicitly
+          cp out-sdk/app/libfirebase_app.so out-sdk/auth/libfirebase_auth.so firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package
           cd firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package
           tar -czhf ../firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package.tgz .
 

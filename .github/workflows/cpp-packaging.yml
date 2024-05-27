@@ -277,18 +277,6 @@ jobs:
         suffix: ['']
 
     steps:
-
-      - name: Check uploaded .so files
-        run: |
-          echo "Checking uploaded .so files..."
-          tar -xzf firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package.tgz
-          if [[ -f firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}/out-sdk/app/libfirebase_app.so && -f firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}/out-sdk/auth/libfirebase_auth.so ]]; then
-            echo ".so files uploaded successfully."
-          else
-            echo "ERROR: .so files not found in the uploaded artifact."
-            exit 1
-          fi
-
       - name: fetch SDK
         uses: actions/checkout@v3
         with:
@@ -314,6 +302,17 @@ jobs:
           if [[ $(uname) == "Darwin"* ]]; then
             brew install parallel
           fi
+
+      - name: Check uploaded .so files
+        run: |
+            echo "Checking uploaded .so files..."
+            tar -xzf firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package.tgz
+            if [[ -f firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}/out-sdk/app/libfirebase_app.so && -f firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}/out-sdk/auth/libfirebase_auth.so ]]; then
+              echo ".so files uploaded successfully."
+            else
+              echo "ERROR: .so files not found in the uploaded artifact."
+              exit 1
+            fi
 
       - name: postprocess and package built SDK
         run: |

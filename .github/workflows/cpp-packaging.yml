@@ -302,7 +302,7 @@ jobs:
           if [[ $(uname) == "Darwin"* ]]; then
             brew install parallel
           fi
-
+      
       - name: postprocess and package built SDK
         run: |
           mkdir -p bin
@@ -330,7 +330,8 @@ jobs:
             temp_dir=$(mktemp -d)
             tar -xzf ${pkg} -C ${temp_dir}
             
-            find ${temp_dir} -name '*.so' -type f -exec echo "Found .so file: {}" \;
+            # Copy .so files to the package directory
+            find ${temp_dir} -name '*.so' -type f -exec cp {} firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package/libs/${{ matrix.sdk_platform }} \;
             
             # Clean up
             rm -rf ${temp_dir}

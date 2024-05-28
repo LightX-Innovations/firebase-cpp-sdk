@@ -329,12 +329,8 @@ jobs:
             # Extract the contents of the package
             temp_dir=$(mktemp -d)
             tar -xzf ${pkg} -C ${temp_dir}
-            # Find and copy .so files to SDK package directory
-            for so_file in $(find ${temp_dir} -name '*.so' -type f); do
-              cp ${so_file} firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package/libs/${{ matrix.sdk_platform }}/
-            done
-            # Clean up
-            rm -rf ${temp_dir}
+            
+            find ${temp_dir} -name '*.so' -type f -exec echo "Found .so file: {}" \;
             
             # Clean up
             rm -rf ${temp_dir}

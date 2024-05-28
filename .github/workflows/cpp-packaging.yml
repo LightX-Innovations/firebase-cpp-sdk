@@ -303,6 +303,10 @@ jobs:
             brew install parallel
           fi
 
+      - name: Check extracted files
+        run: |
+            tar -tzf artifacts/firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-build.tgz
+
       - name: postprocess and package built SDK
         run: |
           mkdir -p bin

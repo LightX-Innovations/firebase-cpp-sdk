@@ -319,10 +319,19 @@ jobs:
           tar -xvzf artifacts/packaging-tools-${tools_platform}/packaging-tools.tgz -C bin
           chmod -R u+x bin
           for pkg in artifacts/firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}*-build/*.tgz; do
-            echo "${pkg}"
             variant=$(sdk-src/build_scripts/desktop/get_variant.sh "${pkg}")
             additional_flags=(${verbose_flag})
             sdk-src/build_scripts/desktop/package.sh -b ${pkg} -o firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package -p ${{ matrix.sdk_platform }} -t bin -d ${variant} -P python3 -j ${additional_flags[*]}
+            # Extract the contents of the package
+            temp_dir=$(mktemp -d)
+            tar -xzf ${pkg} -C ${temp_dir}
+
+            # Find and print .so files
+            echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+            find ${temp_dir} -name '*.so' -type f -exec echo "Found .so file: {}" \;
+
+            # Clean up
+            rm -rf ${temp_dir}
           done
           cd firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package
           tar -czhf ../firebase-cpp-sdk-${{ matrix.sdk_platform }}${{ matrix.suffix }}-package.tgz .

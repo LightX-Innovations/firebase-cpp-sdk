@@ -444,3 +444,87 @@ jobs:
         with:
           name: firebase_cpp_sdk.zip
           path: firebase_cpp_sdk.zip
+
+
+  merge_packages:
+    name: final-merge-packages
+    runs-on: ubuntu-20.04
+    if: ${{ github.event.inputs.downloadPublicVersion == '' && github.event.inputs.downloadPreviousRun == '' }}
+    needs: [package_desktop, log_inputs]
+    steps:
+      - name: fetch SDK
+        uses: actions/checkout@v3
+        with:
+          path: sdk-src
+
+      - name: download artifact
+        uses: actions/download-artifact@v3
+        with:
+          # download-artifact doesn't support wildcards, but by default
+          # will download all artifacts. Sadly this is what we must do.
+          path: artifacts
+
+      - name: merge SDK packages
+        shell: bash
+        run: |
+          set -ex
+          mkdir -p firebase-cpp-sdk-final/firebase_cpp_sdk
+          for pkg in artifacts/firebase-cpp-sdk-*-package/*.tgz; do
+            tar -xzf "${pkg}" -C firebase-cpp-sdk-final/firebase_cpp_sdk
+          done
+          # Add the final files.
+          sdk-src/build_scripts/other/package.sh sdk-src firebase-cpp-sdk-final/firebase_cpp_sdk
+
+          # Zip up the package and grab a hash of the result.
+          cd firebase-cpp-sdk-final
+          # Save the hash of every file into the SDK package.
+          find firebase_cpp_sdk -type f -print0 | xargs -0 ${{ env.hashCommand }} --tag > file_hashes.txt
+          mv file_hashes.txt firebase_cpp_sdk/
+          # Zip up the SDK package recursively, preserving symlinks.
+          zip -9 -r -y ../firebase_cpp_sdk.zip firebase_cpp_sdk
+          cd ..
+
+      - name: compute SDK hash
+        shell: bash
+        run: |
+          ${{ env.hashCommand }} --tag firebase_cpp_sdk.zip > firebase_cpp_sdk_hash.txt
+          echo "::warning ::$(cat firebase_cpp_sdk_hash.txt)"
+
+      - name: Print final package contents
+        shell: bash
+        run: |
+          cd firebase-cpp-sdk-final
+          find firebase_cpp_sdk -type f
+
+      - name: upload hash
+        uses: actions/upload-artifact@v3
+        with:
+          name: firebase_cpp_sdk_hash.txt
+          path: firebase_cpp_sdk_hash.txt
+
+      - name: upload SDK zip
+        uses: actions/upload-artifact@v3
+        with:
+          name: firebase_cpp_sdk.zip
+          path: firebase_cpp_sdk.zip        
+
+  cleanup_packaging_artifacts:
+    # Clean up intermediate artifacts from packaging step.
+    # This can happen after the final package merge is finished.
+    name: cleanup-packaging-artifacts
+    runs-on: ubuntu-20.04
+    needs: [merge_packages]
+    if: |
+      (
+        (github.event.inputs.preserveIntermediateArtifacts == 0 || github.event.inputs.preserveIntermediateArtifacts == '')
+        && github.event.inputs.downloadPublicVersion == ''
+        && github.event.inputs.downloadPreviousRun == ''
+      )
+    steps:
+    - uses: geekyeggo/delete-artifact@v2
+      with:
+        name: |
+          packaging-tools-*
+          firebase-cpp-sdk-*-package
+        failOnError: false
+        useGlob: true

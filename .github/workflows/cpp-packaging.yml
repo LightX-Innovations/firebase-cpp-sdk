@@ -103,7 +103,6 @@ jobs:
             sleep 300
           done
           set -e
-          apt-get install libsecret-1-dev
 
           tar -xf binutils.tar.xz
           mv ./binutils-${{ matrix.binutils_version }} ./binutils-src

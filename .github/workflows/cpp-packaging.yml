@@ -164,7 +164,7 @@ jobs:
             sdk_platform: "linux"
           - os: ubuntu-latest
             vcpkg_triplet_suffix: "arm-raspberry"
-            additional_build_flags: "--toolchain_file toolchains/raspberry-pi.cmake"
+            additional_build_flags: ""
             sdk_platform: "linux"
             architecture: "armv7"
             linux_abi: "c++11"

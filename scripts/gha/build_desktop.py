@@ -256,6 +256,10 @@ def cmake_configure(
         vcpkg_triplet = utils.get_vcpkg_triplet(arch, msvc_runtime_library)
         cmd.append("-DVCPKG_TARGET_TRIPLET={0}".format(vcpkg_triplet))
 
+    if utils.is_linux_os() and arch == "armv7":
+        cmd.append(r'-DCMAKE_C_FLAGS="-D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64"')
+        cmd.append(r'-DCMAKE_CXX_FLAGS="-D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64"')
+
     if utils.is_windows_os():
         # If building for x86, we should supply -A Win32 to cmake configure
         # Its a good habit to specify for x64 too as the default might be different

@@ -153,7 +153,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         build_type: ["Release", "Debug"]
-        architecture: ["x64"]
+        architecture: ["x64", "armv7"]
         linux_abi: ["c++11"]
         python_version: [3.8]
         include:
@@ -162,6 +162,12 @@ jobs:
             vcpkg_triplet_suffix: "linux"
             additional_build_flags: ""
             sdk_platform: "linux"
+          - os: ubuntu-latest
+            vcpkg_triplet_suffix: "arm-raspberry"
+            additional_build_flags: "--toolchain_file toolchains/raspberry-pi.cmake"
+            sdk_platform: "linux"
+            architecture: "armv7"
+            linux_abi: "c++11"
         exclude:
           - os: ubuntu-latest
             build_type: "Debug"

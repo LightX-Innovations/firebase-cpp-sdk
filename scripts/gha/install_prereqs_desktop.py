@@ -53,6 +53,16 @@ def main():
         if utils.is_linux_os():
             # sudo apt install libsecret-1-dev
             utils.run_command(["apt", "install", "-y", "libsecret-1-dev"], as_root=True)
+            utils.run_command(
+                [
+                    "apt",
+                    "install",
+                    "-y",
+                    "gcc-arm-linux-gnueabihf",
+                    "g++-arm-linux-gnueabihf",
+                ],
+                as_root=True,
+            )
 
         # Install go on linux/mac if its not installed already
         if not utils.is_command_installed("go"):

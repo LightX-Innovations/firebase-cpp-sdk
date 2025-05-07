@@ -206,7 +206,7 @@ def cmake_configure(
             cmd.append("-DCMAKE_TOOLCHAIN_FILE={0}".format(toolchain_file_path))
         elif utils.is_linux_os() and arch == "armv7":
             # Use a separate cmake toolchain for cross compiling linux armv7 builds
-            vcpkg_toolchain_file_path = os.path.join(
+            toolchain_file_path = os.path.join(
                 os.getcwd(),
                 "cmake",
                 "toolchains",

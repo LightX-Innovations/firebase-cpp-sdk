@@ -5,25 +5,25 @@ on:
       # Run a full packaging step any time a new branch is merged into main.
       - main
   schedule:
-    - cron: "0 8 * * *"  # 8am UTC = 12am PST / 1am PDT
+    - cron: "0 8 * * *" # 8am UTC = 12am PST / 1am PDT
   workflow_dispatch:
     inputs:
       preserveIntermediateArtifacts:
-        description: 'preserve intermediate artifacts?'
-        default: '0'
+        description: "preserve intermediate artifacts?"
+        default: "0"
       verboseBuild:
-        description: 'verbose build?'
-        default: '0'
+        description: "verbose build?"
+        default: "0"
       skipIntegrationTests:
-        description: 'skip integration tests?'
-        default: '0'
+        description: "skip integration tests?"
+        default: "0"
       downloadPublicVersion:
-        description: 'public version # to test against'
+        description: "public version # to test against"
       downloadPreviousRun:
-        description: 'previous run # to test against'
+        description: "previous run # to test against"
       use_expanded_matrix:
-        description: 'Use an expanded matrix?'
-        default: '0'
+        description: "Use an expanded matrix?"
+        default: "0"
         required: true
 
 env:
@@ -42,7 +42,7 @@ env:
 jobs:
   log_inputs:
     name: log-inputs
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: log run inputs
         run: |
@@ -79,12 +79,12 @@ jobs:
     if: ${{ github.event.inputs.downloadPublicVersion == '' && github.event.inputs.downloadPreviousRun == '' }}
     strategy:
       matrix:
-        os: [ubuntu-20.04]
+        os: [ubuntu-latest]
         include:
-        - os: ubuntu-20.04
-          tools_platform: linux
-          # Binutils 2.35.1 released Sep 19, 2020
-          binutils_version: "2.35.1"
+          - os: ubuntu-latest
+            tools_platform: linux
+            # Binutils 2.35.1 released Sep 19, 2020
+            binutils_version: "2.35.1"
 
     steps:
       - name: Setup python
@@ -151,20 +151,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04]
+        os: [ubuntu-latest]
         build_type: ["Release", "Debug"]
         architecture: ["x64"]
         linux_abi: ["c++11"]
         python_version: [3.8]
         include:
           # Find way to only build app and auth
-        - os: ubuntu-20.04
-          vcpkg_triplet_suffix: "linux"
-          additional_build_flags: ""
-          sdk_platform: "linux"
+          - os: ubuntu-latest
+            vcpkg_triplet_suffix: "linux"
+            additional_build_flags: ""
+            sdk_platform: "linux"
         exclude:
-        - os: ubuntu-20.04
-          build_type: "Debug"
+          - os: ubuntu-latest
+            build_type: "Debug"
 
     steps:
       - name: Store git credentials for all git commands
@@ -221,7 +221,7 @@ jobs:
             verbose_flag=--verbose
           fi
           echo "VERBOSE_FLAG=${verbose_flag}" >> $GITHUB_ENV
-      
+
       # Run the build in the host OS default shell since Windows can't handle long path names in bash.
       - name: Build desktop SDK
         run: |
@@ -267,14 +267,14 @@ jobs:
 
   package_desktop:
     name: package-${{ matrix.sdk_platform }}${{ matrix.suffix }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: [build_tools, build_desktop]
     if: ${{ github.event.inputs.downloadPublicVersion == '' && github.event.inputs.downloadPreviousRun == '' }}
     strategy:
       fail-fast: false
       matrix:
         sdk_platform: [linux]
-        suffix: ['']
+        suffix: [""]
 
     steps:
       - name: fetch SDK
@@ -302,7 +302,7 @@ jobs:
           if [[ $(uname) == "Darwin"* ]]; then
             brew install parallel
           fi
-      
+
       - name: postprocess and package built SDK
         run: |
           mkdir -p bin
@@ -368,7 +368,7 @@ jobs:
   # TODO : Check if removeable or not
   download_sdk_package:
     name: download-sdk-package
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: [log_inputs]
     if: ${{ github.event.inputs.downloadPublicVersion != '' || github.event.inputs.downloadPreviousRun != '' }}
     steps:
@@ -376,8 +376,8 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         if: ${{ github.event.inputs.downloadPreviousRun != '' }}
         with:
-          name: 'firebase_cpp_sdk.zip'
-          workflow: 'cpp-packaging.yml'
+          name: "firebase_cpp_sdk.zip"
+          workflow: "cpp-packaging.yml"
           run_id: ${{ github.event.inputs.downloadPreviousRun }}
 
       - name: fetch public SDK package from web
@@ -415,10 +415,9 @@ jobs:
           name: firebase_cpp_sdk.zip
           path: firebase_cpp_sdk.zip
 
-
   merge_packages:
     name: final-merge-packages
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     if: ${{ github.event.inputs.downloadPublicVersion == '' && github.event.inputs.downloadPreviousRun == '' }}
     needs: [package_desktop, log_inputs]
     steps:
@@ -476,13 +475,13 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: firebase_cpp_sdk.zip
-          path: firebase_cpp_sdk.zip        
+          path: firebase_cpp_sdk.zip
 
   cleanup_packaging_artifacts:
     # Clean up intermediate artifacts from packaging step.
     # This can happen after the final package merge is finished.
     name: cleanup-packaging-artifacts
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: [merge_packages]
     if: |
       (
@@ -491,10 +490,10 @@ jobs:
         && github.event.inputs.downloadPreviousRun == ''
       )
     steps:
-    - uses: geekyeggo/delete-artifact@v2
-      with:
-        name: |
-          packaging-tools-*
-          firebase-cpp-sdk-*-package
-        failOnError: false
-        useGlob: true
+      - uses: geekyeggo/delete-artifact@v2
+        with:
+          name: |
+            packaging-tools-*
+            firebase-cpp-sdk-*-package
+          failOnError: false
+          useGlob: true

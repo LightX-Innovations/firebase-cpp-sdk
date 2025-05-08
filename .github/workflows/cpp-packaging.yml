@@ -151,7 +151,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest-arm]
+        os: [ubuntu-arm-latest]
         # build_type: ["Release", "Debug"]
         build_type: ["Release"]
         # architecture: ["x64", "armv7"]
@@ -164,7 +164,7 @@ jobs:
           #   vcpkg_triplet_suffix: "linux"
           #   additional_build_flags: ""
           #   sdk_platform: "linux"
-          - os: ubuntu-latest-arm
+          - os: ubuntu-arm-latest
             vcpkg_triplet_suffix: ""
             additional_build_flags: ""
             sdk_platform: "linux"

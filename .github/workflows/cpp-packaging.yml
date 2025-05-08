@@ -153,7 +153,8 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         build_type: ["Release", "Debug"]
-        architecture: ["x64", "armv7"]
+        # architecture: ["x64", "armv7"]
+        architecture: ["armv7"]
         linux_abi: ["c++11"]
         python_version: [3.8]
         include:
@@ -227,6 +228,8 @@ jobs:
             verbose_flag=--verbose
           fi
           echo "VERBOSE_FLAG=${verbose_flag}" >> $GITHUB_ENV
+
+      - uses: fawazahmed0/action-debug-vscode@main
 
       # Run the build in the host OS default shell since Windows can't handle long path names in bash.
       - name: Build desktop SDK

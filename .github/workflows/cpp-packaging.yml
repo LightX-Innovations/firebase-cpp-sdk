@@ -163,8 +163,8 @@ jobs:
             vcpkg_triplet_suffix: "linux"
             additional_build_flags: ""
             sdk_platform: "linux"
-          - os: ubuntu-latest
-            vcpkg_triplet_suffix: "arm-raspberry"
+          - os: ubuntu-latest-arm
+            vcpkg_triplet_suffix: ""
             additional_build_flags: ""
             sdk_platform: "linux"
             architecture: "armv7"
@@ -242,7 +242,6 @@ jobs:
                                               ${VERBOSE_FLAG} \
                                               ${{ matrix.additional_build_flags }} \
                                               --gha_build
-
       - name: Archive SDK
         shell: bash
         run: |

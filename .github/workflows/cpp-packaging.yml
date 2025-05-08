@@ -151,7 +151,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest-arm]
         # build_type: ["Release", "Debug"]
         build_type: ["Release"]
         # architecture: ["x64", "armv7"]
@@ -171,7 +171,7 @@ jobs:
             architecture: "armv7"
             linux_abi: "c++11"
         exclude:
-          - os: ubuntu-latest
+          - os: ubuntu-latest-arm
             build_type: "Debug"
 
     steps:

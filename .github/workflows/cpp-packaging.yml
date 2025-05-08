@@ -160,10 +160,10 @@ jobs:
         python_version: [3.8]
         include:
           # Find way to only build app and auth
-          - os: ubuntu-latest
-            vcpkg_triplet_suffix: "linux"
-            additional_build_flags: ""
-            sdk_platform: "linux"
+          # - os: ubuntu-latest
+          #   vcpkg_triplet_suffix: "linux"
+          #   additional_build_flags: ""
+          #   sdk_platform: "linux"
           - os: ubuntu-latest-arm
             vcpkg_triplet_suffix: ""
             additional_build_flags: ""
